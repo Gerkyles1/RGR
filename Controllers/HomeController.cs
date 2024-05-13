@@ -27,7 +27,7 @@ namespace RGR.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult RGR2()
         {
             return View();
         }

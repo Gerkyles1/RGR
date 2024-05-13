@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "RGR2";
+}
+<style>
+    .container {
+        position: relative;
+    }
+
+    .window {
+        position: absolute;
+        width: 200px;
+        height: 150px;
+        background-color: #ccc;
+        border: 1px solid #999;
+        cursor: move;
+    }
+
+    #addButton {
+        margin-bottom: 10px;
+    }
+
+</style>
+
+<div class="container">
+    <button id="addButton">+</button>
+    <div id="windowsContainer"></div>
+</div>
+
+<script>
+    let zIndexCounter = 1;
+
+    document.getElementById('addButton').addEventListener('click', function () {
+        createWindow();
+    });
+
+    function createWindow() {
+        const windowDiv = document.createElement('div');
+        windowDiv.className = 'window';
+        windowDiv.style.zIndex = zIndexCounter++;
+        windowDiv.style.left = '50px';
+        windowDiv.style.top = '50px';
+
+        const closeButton = document.createElement('button');
+        closeButton.innerText = 'x';
+        closeButton.className = 'closeButton';
+        closeButton.addEventListener('click', function () {
+            document.body.removeChild(windowDiv);
+        });
+        windowDiv.appendChild(closeButton);
+
+        windowDiv.addEventListener('mousedown', function (event) {
+            bringToFront(windowDiv);
+            startDragging(event, windowDiv);
+        });
+
+        document.body.appendChild(windowDiv);
+    }
+
+    function bringToFront(windowDiv) {
+        windowDiv.style.zIndex = zIndexCounter++;
+    }
+
+    function startDragging(event, windowDiv) {
+        const startX = event.clientX - windowDiv.getBoundingClientRect().left;
+        const startY = event.clientY - windowDiv.getBoundingClientRect().top;
+
+        function onMouseMove(event) {
+            const newX = event.clientX - startX;
+            const newY = event.clientY - startY;
+
+            windowDiv.style.left = newX + 'px';
+            windowDiv.style.top = newY + 'px';
+        }
+
+        function onMouseUp() {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    }
+
+</script>
